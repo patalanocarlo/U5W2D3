@@ -1,11 +1,10 @@
 package patalanocarlo.U5W2D3.Controllers;
 
-import lombok.Lombok;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import patalanocarlo.U5W2D3.Entities.Author;
 import patalanocarlo.U5W2D3.Entities.BlogPost;
@@ -30,7 +29,7 @@ public class BlogPostController {
     }
 
     @PostMapping
-    public BlogPost createBlogPost(@RequestBody BlogPost blogPost) {
+    public BlogPost createBlogPost(@RequestBody @Validated BlogPost blogPost) {
         Author existingAuthor = authorService.findById(blogPost.getAuthor().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Autore non trovato con ID: " + blogPost.getAuthor().getId()));
         blogPost.setAuthor(existingAuthor);
@@ -49,7 +48,7 @@ public class BlogPostController {
                 .orElseThrow(() -> new ResourceNotFoundException("BlogPost non trovato con ID: " + postId));
     }
     @PutMapping("/{id}")
-    public BlogPost updateBlogPost(@PathVariable Long id, @RequestBody BlogPost updatedBlogPost) {
+    public BlogPost updateBlogPost(@PathVariable Long id, @RequestBody @Validated BlogPost updatedBlogPost) {
         Author author = authorService.findById(updatedBlogPost.getAuthor().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Autore non trovato"));
         updatedBlogPost.setAuthor(author);
